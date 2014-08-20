@@ -1441,6 +1441,9 @@ function bootstrap(element, modules) {
         });
       }]
     );
+
+    wizehive.injector = injector;
+
     return injector;
   };
 
@@ -3782,6 +3785,8 @@ function createInjector(modulesToLoad) {
             return instanceInjector.invoke(provider.$get, provider);
           }));
 
+  wizehive.providerCache = providerCache;
+  wizehive.instanceCache = instanceCache;
 
   forEach(loadModules(modulesToLoad), function(fn) { instanceInjector.invoke(fn || noop); });
 
@@ -11244,7 +11249,8 @@ function $ParseProvider() {
       switch (typeof exp) {
         case 'string':
 
-          if (cache.hasOwnProperty(exp)) {
+          if (cache.hasOwnProperty(exp) &&
+            wizehive.cacheAngularExpressions) {
             return cache[exp];
           }
 
