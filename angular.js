@@ -1451,6 +1451,9 @@ function bootstrap(element, modules, config) {
         });
       }]
     );
+
+    wizehive.injector = injector;
+
     return injector;
   };
 
@@ -4003,6 +4006,8 @@ function createInjector(modulesToLoad, strictDi) {
             return instanceInjector.invoke(provider.$get, provider, undefined, serviceName);
           }));
 
+  wizehive.providerCache = providerCache;
+  wizehive.instanceCache = instanceCache;
 
   forEach(loadModules(modulesToLoad), function(fn) { instanceInjector.invoke(fn || noop); });
 
@@ -12664,7 +12669,7 @@ function $ParseProvider() {
           cacheKey = exp = exp.trim();
 
           var cache = (expensiveChecks ? cacheExpensive : cacheDefault);
-          parsedExpression = cache[cacheKey];
+          parsedExpression = wizehive.cacheAngularExpressions && cache[cacheKey];
 
           if (!parsedExpression) {
             if (exp.charAt(0) === ':' && exp.charAt(1) === ':') {
